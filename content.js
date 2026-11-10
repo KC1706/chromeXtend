@@ -45,10 +45,15 @@
     left.appendChild(app);
   }
 
+  var helpEl = null;
   (cfg.menus || []).forEach(function (label) {
     var m = document.createElement("span");
     m.className = "mb-menu";
     m.textContent = label;
+    if (label === "Help") {
+      m.classList.add("mb-menu-toggle");
+      helpEl = m;
+    }
     left.appendChild(m);
   });
 
@@ -81,6 +86,103 @@
     clockEl = document.createElement("span");
     clockEl.className = "mb-clock";
     right.appendChild(clockEl);
+  }
+
+  // Purple screen-sharing badge (leftmost status item). Clicking the Help menu
+  // opens a small panel with an on/off switch that shows/hides the badge.
+  if (cfg.screenShare) {
+    var shareEl = document.createElement("span");
+    shareEl.className = "mb-icon mb-screenshare";
+    shareEl.innerHTML = ICONS.screenshare || "";
+    right.insertBefore(shareEl, right.firstChild);
+
+    var shareOn = !!cfg.screenShare.on;
+    function renderShare() {
+      shareEl.style.display = shareOn ? "" : "none";
+    }
+    renderShare();
+
+    if (helpEl) {
+      var helpPanel = null;
+
+      function buildHelpPanel() {
+        var panel = document.createElement("div");
+        panel.className = "mb-dropdown mb-help-dropdown";
+
+        var row = document.createElement("div");
+        row.className = "mb-dd-item mb-dd-switch-row";
+
+        var nm = document.createElement("span");
+        nm.className = "mb-dd-name";
+        nm.textContent = "Screen Sharing";
+
+        var sw = document.createElement("button");
+        sw.type = "button";
+        sw.className = "mb-switch";
+        sw.setAttribute("aria-label", "Screen sharing on/off");
+
+        function renderSwitch() {
+          sw.classList.toggle("on", shareOn);
+          sw.setAttribute("aria-pressed", shareOn ? "true" : "false");
+        }
+        renderSwitch();
+
+        // The switch is non-interactive (CSS); the whole row toggles once.
+        row.addEventListener("click", function (e) {
+          e.stopPropagation();
+          shareOn = !shareOn;
+          renderSwitch();
+          renderShare();
+        });
+
+        row.appendChild(nm);
+        row.appendChild(sw);
+        panel.appendChild(row);
+        return panel;
+      }
+
+      function positionHelpPanel() {
+        if (!helpPanel) return;
+        var r = helpEl.getBoundingClientRect();
+        helpPanel.style.top = BAR_HEIGHT + 2 + "px";
+        helpPanel.style.left = Math.max(6, r.left - 6) + "px";
+      }
+
+      function onHelpDocClick(e) {
+        if (
+          helpPanel &&
+          !helpPanel.contains(e.target) &&
+          !helpEl.contains(e.target)
+        ) {
+          closeHelp();
+        }
+      }
+
+      function openHelp() {
+        if (helpPanel) return;
+        helpPanel = buildHelpPanel();
+        document.documentElement.appendChild(helpPanel);
+        positionHelpPanel();
+        helpEl.classList.add("open");
+        document.addEventListener("click", onHelpDocClick, true);
+        window.addEventListener("resize", positionHelpPanel);
+      }
+
+      function closeHelp() {
+        if (!helpPanel) return;
+        helpPanel.remove();
+        helpPanel = null;
+        helpEl.classList.remove("open");
+        document.removeEventListener("click", onHelpDocClick, true);
+        window.removeEventListener("resize", positionHelpPanel);
+      }
+
+      helpEl.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (helpPanel) closeHelp();
+        else openHelp();
+      });
+    }
   }
 
   bar.appendChild(left);

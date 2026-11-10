@@ -29,6 +29,10 @@ window.__MENUBAR_CONFIG__ = {
   // Text shown just before the battery icon (e.g. "10%"). Empty string hides it.
   batteryLevel: "90%",
 
+  // A purple "screen sharing" badge in the status area, toggled on/off by
+  // clicking the Help menu. `on` is the initial state (false = hidden).
+  screenShare: { on: false },
+
   // Clicking the Wi-Fi icon opens a cosmetic macOS Control-Center-style panel.
   wifi: {
     // Whether Wi-Fi is "on" (shows the networks) or "off".
@@ -97,6 +101,10 @@ window.__MENUBAR_CONFIG__ = {
       '<svg viewBox="0 0 26 13" width="22" height="11" fill="none" aria-hidden="true"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="currentColor" stroke-opacity="0.6"/><rect x="2" y="2" width="16" height="9" rx="1.5" fill="currentColor"/><path d="M24 4c1 .2 1 4.6 0 4.8V4z" fill="currentColor" fill-opacity="0.6"/></svg>',
     // Right chevron for the "Other Networks" row.
     chevron:
-      '<svg viewBox="0 0 8 14" width="7" height="12" fill="none" aria-hidden="true"><path d="M1 1l5.5 6L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+      '<svg viewBox="0 0 8 14" width="7" height="12" fill="none" aria-hidden="true"><path d="M1 1l5.5 6L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    // White display-with-person glyph for the purple screen-sharing badge.
+    // The person's halo fill (#6d6fe3) matches the pill background in style.css.
+    screenshare:
+      '<svg viewBox="0 0 28 18" width="21" height="13" fill="none" aria-hidden="true"><rect x="1.3" y="2.6" width="16" height="11" rx="2.6" stroke="#fff" stroke-width="1.8"/><circle cx="20" cy="7" r="3.5" fill="#6d6fe3"/><path d="M13.6 16.8c0-3.5 2.9-5.5 6.4-5.5s6.4 2 6.4 5.5z" fill="#6d6fe3"/><circle cx="20" cy="6.9" r="2.5" fill="#fff"/><path d="M15 16.2c0-2.9 2.2-4.5 5-4.5s5 1.6 5 4.5z" fill="#fff"/></svg>'
   }
 };
