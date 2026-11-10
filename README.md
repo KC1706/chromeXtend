@@ -1,9 +1,10 @@
 # Menu Bar Overlay
 
 A small Chrome extension (Manifest V3) that injects a **cosmetic** macOS-style
-menu bar at the top of webpages. The bar stays hidden off-screen and slides down
-when you move the pointer to the very top edge of the page, then tucks away when
-you move off it. Handy for theming, UI demos, mockups, and screenshots.
+menu bar at the top of webpages. By default the bar is always visible, pinned to
+the top of the page content. Set `alwaysVisible: false` in `config.js` to switch
+to hover-reveal mode, where it stays hidden until the pointer reaches the top
+edge. Handy for theming, UI demos, mockups, and screenshots.
 
 It is purely visual — the menus don't open and nothing is clickable.
 
@@ -23,6 +24,8 @@ All settings live in [`config.js`](./config.js). Edit the object, reload the
 extension, and refresh the page. Options include:
 
 - `enabled` — master on/off switch.
+- `alwaysVisible` — `true` pins the bar so it's always shown; `false` hides it
+  until the pointer reaches the top edge (hover-reveal).
 - `appName` — the bold active-app name after the Apple logo.
 - `menus` — the menu titles (`File`, `Edit`, …).
 - `rightIcons` — which status icons to show (`battery`, `wifi`, `search`, `control`).

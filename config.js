@@ -11,6 +11,11 @@ window.__MENUBAR_CONFIG__ = {
   // Master on/off switch. Set to false to disable the overlay everywhere.
   enabled: true,
 
+  // When true, the bar is pinned and always visible (no hover needed).
+  // When false, it stays hidden and slides down only when the pointer
+  // reaches the top edge of the page.
+  alwaysVisible: true,
+
   // The bold "active app" name shown right after the Apple logo.
   appName: "Chrome",
 

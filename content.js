@@ -97,6 +97,20 @@
     clockTimer = setInterval(renderClock, 1000);
   }
 
+  // --- Always-visible mode -------------------------------------------------
+  // If configured, pin the bar open and skip the hover logic entirely.
+  if (cfg.alwaysVisible) {
+    bar.classList.add("visible");
+    window.addEventListener(
+      "pagehide",
+      function () {
+        if (clockTimer) clearInterval(clockTimer);
+      },
+      { once: true }
+    );
+    return;
+  }
+
   // --- Reveal on pointer near top edge ------------------------------------
   var visible = false;
   var ticking = false;
