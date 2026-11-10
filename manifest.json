@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Menu Bar Overlay",
+  "name": "youtube speed controller",
   "version": "1.0.0",
   "description": "A cosmetic, hover-revealed fake macOS menu bar overlay for webpages. For theming, UI demos, mockups and screenshots.",
   "icons": {

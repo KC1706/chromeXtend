@@ -26,6 +26,16 @@ window.__MENUBAR_CONFIG__ = {
   // Remove or reorder as you like. Available: "battery", "wifi", "search", "control".
   rightIcons: ["battery", "wifi", "search", "control"],
 
+  // Clicking the Wi-Fi icon opens a cosmetic macOS-style dropdown.
+  wifi: {
+    // Whether Wi-Fi is "on" (shows the network list) or "off".
+    on: true,
+    // Networks listed in the dropdown, top to bottom.
+    networks: ["CDC_Test", "ACADEMIC"],
+    // Which network shows as the connected one (gets the checkmark + "Connected").
+    connected: "CDC_Test"
+  },
+
   // Live clock on the far right.
   showClock: true,
   clock: {
@@ -58,6 +68,12 @@ window.__MENUBAR_CONFIG__ = {
     control:
       '<svg viewBox="0 0 24 16" width="19" height="13" fill="none" aria-hidden="true"><rect x="2" y="3.5" width="9" height="2.2" rx="1.1" fill="currentColor"/><rect x="2" y="10.3" width="9" height="2.2" rx="1.1" fill="currentColor"/><rect x="13" y="3.5" width="9" height="2.2" rx="1.1" fill="currentColor" fill-opacity="0.4"/><rect x="13" y="10.3" width="9" height="2.2" rx="1.1" fill="currentColor" fill-opacity="0.4"/><circle cx="8" cy="4.6" r="2.2" fill="currentColor"/><circle cx="16" cy="11.4" r="2.2" fill="currentColor"/></svg>',
     apple:
-      '<svg viewBox="0 0 14 17" width="13" height="16" fill="currentColor" aria-hidden="true"><path d="M11.3 9c0-1.9 1.5-2.8 1.6-2.9-0.9-1.3-2.3-1.5-2.8-1.5-1.2-.1-2.3.7-2.9.7-.6 0-1.5-.7-2.5-.7C3.4 4.6 2.2 5.4 1.6 6.6c-1.4 2.4-.4 6 1 8 .7.9 1.5 2 2.5 1.9 1-.04 1.4-.6 2.6-.6s1.5.6 2.6.6c1.1-.02 1.7-.9 2.4-1.9.5-.7.8-1.4 1-2.2-.02-.01-1.8-.7-1.8-2.9z"/><path d="M9.3 3.1c.5-.6.9-1.5.8-2.4-.8.03-1.7.5-2.2 1.2-.5.6-.9 1.5-.8 2.3.9.07 1.7-.4 2.2-1.1z"/></svg>'
+      '<svg viewBox="0 0 14 17" width="13" height="16" fill="currentColor" aria-hidden="true"><path d="M11.3 9c0-1.9 1.5-2.8 1.6-2.9-0.9-1.3-2.3-1.5-2.8-1.5-1.2-.1-2.3.7-2.9.7-.6 0-1.5-.7-2.5-.7C3.4 4.6 2.2 5.4 1.6 6.6c-1.4 2.4-.4 6 1 8 .7.9 1.5 2 2.5 1.9 1-.04 1.4-.6 2.6-.6s1.5.6 2.6.6c1.1-.02 1.7-.9 2.4-1.9.5-.7.8-1.4 1-2.2-.02-.01-1.8-.7-1.8-2.9z"/><path d="M9.3 3.1c.5-.6.9-1.5.8-2.4-.8.03-1.7.5-2.2 1.2-.5.6-.9 1.5-.8 2.3.9.07 1.7-.4 2.2-1.1z"/></svg>',
+    // Checkmark shown next to the connected network in the Wi-Fi dropdown.
+    check:
+      '<svg viewBox="0 0 14 14" width="13" height="13" fill="none" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    // Small padlock shown on secured networks in the Wi-Fi dropdown.
+    lock:
+      '<svg viewBox="0 0 12 14" width="11" height="13" fill="currentColor" aria-hidden="true"><rect x="1.5" y="6" width="9" height="7" rx="1.4"/><path d="M3.3 6V4.2a2.7 2.7 0 015.4 0V6" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>'
   }
 };
