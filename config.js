@@ -14,7 +14,7 @@ window.__MENUBAR_CONFIG__ = {
   // When true, the bar is pinned and always visible (no hover needed).
   // When false, it stays hidden and slides down only when the pointer
   // reaches the top edge of the page.
-  alwaysVisible: true,
+  alwaysVisible: false,
 
   // The bold "active app" name shown right after the Apple logo.
   appName: "Chrome",
@@ -38,7 +38,7 @@ window.__MENUBAR_CONFIG__ = {
     // The "Known Networks" list. `connected: true` marks the active one (blue icon).
     knownNetworks: [
       { name: "CDC_Test", connected: true },
-      { name: "ACADEMICS" }
+      { name: "ACADEMIC" }
     ]
   },
 
@@ -63,8 +63,9 @@ window.__MENUBAR_CONFIG__ = {
   // Bar height in pixels (macOS menu bar is ~24–30px).
   barHeight: 28,
 
-  // How close to the top edge (in px) the pointer must get to reveal the bar.
-  triggerHeight: 8,
+  // How close to the top edge (in px) the pointer must get to reveal the bar,
+  // and how far it must move away to hide it again. ~100px ≈ 2.5cm on screen.
+  triggerHeight: 100,
 
   // Inline SVG markup for each icon. Uses currentColor so icons follow the
   // light/dark theme automatically. Replace these if you want different glyphs.

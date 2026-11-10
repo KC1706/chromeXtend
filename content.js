@@ -347,8 +347,9 @@
     if (!visible && lastY <= TRIGGER_HEIGHT) {
       visible = true;
       bar.classList.add("visible");
-    } else if (visible && lastY > BAR_HEIGHT && !wifiPanel) {
-      // Keep the bar open while the Wi-Fi dropdown is showing.
+    } else if (visible && lastY > TRIGGER_HEIGHT && !wifiPanel) {
+      // Hide once the pointer leaves the hover zone — but keep it open while
+      // the Wi-Fi dropdown is showing.
       visible = false;
       bar.classList.remove("visible");
     }
