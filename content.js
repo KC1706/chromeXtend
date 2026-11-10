@@ -59,6 +59,13 @@
   var wifiIconEl = null;
   (cfg.rightIcons || []).forEach(function (key) {
     if (!ICONS[key]) return;
+    // macOS shows the battery percentage just to the left of the icon.
+    if (key === "battery" && cfg.batteryLevel) {
+      var lvl = document.createElement("span");
+      lvl.className = "mb-batt-level";
+      lvl.textContent = cfg.batteryLevel;
+      right.appendChild(lvl);
+    }
     var ic = document.createElement("span");
     ic.className = "mb-icon";
     ic.innerHTML = ICONS[key];
@@ -92,7 +99,13 @@
     };
     var locale = (cfg.clock && cfg.clock.locale) || undefined;
     try {
-      clockEl.textContent = new Date().toLocaleString(locale, opts);
+      // macOS menu bar has no commas and upper-cases AM/PM.
+      clockEl.textContent = new Date()
+        .toLocaleString(locale, opts)
+        .replace(/,/g, "")
+        .replace(/\b(am|pm)\b/gi, function (m) {
+          return m.toUpperCase();
+        });
     } catch (e) {
       clockEl.textContent = new Date().toLocaleTimeString();
     }
@@ -110,8 +123,35 @@
   if (wifiIconEl && cfg.wifi) {
     var wcfg = cfg.wifi;
     var wifiOn = wcfg.on !== false;
-    var connected = wcfg.connected || null;
-    var networks = wcfg.networks || [];
+    var hotspot = wcfg.personalHotspot || null;
+    var known = wcfg.knownNetworks || [];
+
+    // A small row factory shared by every entry in the panel.
+    function makeRow(opts) {
+      var row = document.createElement("button");
+      row.type = "button";
+      row.className = "mb-dd-item";
+
+      if (!opts.noIco) {
+        var ico = document.createElement("span");
+        ico.className = "mb-dd-ico" + (opts.icoType ? " " + opts.icoType : "");
+        ico.innerHTML = opts.icoHtml || "";
+        row.appendChild(ico);
+      }
+
+      var nm = document.createElement("span");
+      nm.className = "mb-dd-name";
+      nm.textContent = opts.name;
+      row.appendChild(nm);
+
+      if (opts.rightEl) row.appendChild(opts.rightEl);
+
+      row.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (opts.onClick) opts.onClick();
+      });
+      return row;
+    }
 
     function buildWifiPanel() {
       var panel = document.createElement("div");
@@ -131,74 +171,109 @@
       head.appendChild(toggle);
       panel.appendChild(head);
 
-      var sep = document.createElement("div");
-      sep.className = "mb-dd-sep";
-      panel.appendChild(sep);
-
-      var list = document.createElement("div");
-      list.className = "mb-dd-list";
-      panel.appendChild(list);
+      var body = document.createElement("div");
+      body.className = "mb-dd-body";
+      panel.appendChild(body);
 
       function renderToggle() {
         toggle.classList.toggle("on", wifiOn);
         toggle.setAttribute("aria-pressed", wifiOn ? "true" : "false");
       }
 
-      function renderList() {
-        list.innerHTML = "";
+      function sectionLabel(text) {
+        var l = document.createElement("div");
+        l.className = "mb-dd-label";
+        l.textContent = text;
+        return l;
+      }
+
+      function render() {
+        body.innerHTML = "";
+
         if (!wifiOn) {
           var off = document.createElement("div");
           off.className = "mb-dd-empty";
           off.textContent = "Wi-Fi is off";
-          list.appendChild(off);
+          body.appendChild(off);
           return;
         }
-        networks.forEach(function (name) {
-          var row = document.createElement("button");
-          row.type = "button";
-          row.className = "mb-dd-item";
-          if (name === connected) row.classList.add("connected");
 
-          var check = document.createElement("span");
-          check.className = "mb-dd-check";
-          check.innerHTML = name === connected ? ICONS.check || "" : "";
+        // Personal Hotspot section.
+        if (hotspot) {
+          body.appendChild(sectionLabel("Personal Hotspot"));
+          var meta = document.createElement("span");
+          meta.className = "mb-dd-meta";
+          meta.innerHTML =
+            '<span class="mb-meta-cell">' +
+            (ICONS.cell || "") +
+            "</span>" +
+            (hotspot.signal
+              ? '<span class="mb-meta-sig">' + hotspot.signal + "</span>"
+              : "") +
+            '<span class="mb-meta-batt">' +
+            (ICONS.battMini || "") +
+            "</span>";
+          body.appendChild(
+            makeRow({
+              icoType: "mb-ico-box",
+              icoHtml: ICONS.hotspot || "",
+              name: hotspot.name,
+              rightEl: meta
+            })
+          );
+        }
 
-          var nm = document.createElement("span");
-          nm.className = "mb-dd-name";
-          nm.textContent = name;
-
-          var status = document.createElement("span");
-          status.className = "mb-dd-status";
-          status.textContent = name === connected ? "Connected" : "";
-
-          var lock = document.createElement("span");
-          lock.className = "mb-dd-lock";
-          lock.innerHTML = ICONS.lock || "";
-
-          row.appendChild(check);
-          row.appendChild(nm);
-          row.appendChild(status);
-          row.appendChild(lock);
-
-          // Clicking a network switches the "connected" one (cosmetic only).
-          row.addEventListener("click", function (e) {
-            e.stopPropagation();
-            connected = name;
-            renderList();
+        // Known Networks section.
+        if (known.length) {
+          body.appendChild(sectionLabel("Known Networks"));
+          known.forEach(function (net) {
+            var lock = document.createElement("span");
+            lock.className = "mb-dd-lock";
+            lock.innerHTML = ICONS.lock || "";
+            var isConn = !!net.connected;
+            body.appendChild(
+              makeRow({
+                icoType: isConn ? "mb-ico-circle" : "mb-ico-wifi",
+                icoHtml: ICONS.wifi || "",
+                name: net.name,
+                rightEl: lock,
+                onClick: function () {
+                  // Switch which known network is "connected" (cosmetic only).
+                  known.forEach(function (n) {
+                    n.connected = false;
+                  });
+                  net.connected = true;
+                  render();
+                }
+              })
+            );
           });
-          list.appendChild(row);
-        });
+        }
+
+        // "Other Networks" row with a chevron.
+        var chev = document.createElement("span");
+        chev.className = "mb-dd-chevron";
+        chev.innerHTML = ICONS.chevron || "";
+        body.appendChild(
+          makeRow({ name: "Other Networks", rightEl: chev, noIco: true })
+        );
+
+        // Divider + "Wi-Fi Settings…" row.
+        var sep = document.createElement("div");
+        sep.className = "mb-dd-sep";
+        body.appendChild(sep);
+        body.appendChild(makeRow({ name: "Wi-Fi Settings…", noIco: true }));
       }
 
       toggle.addEventListener("click", function (e) {
         e.stopPropagation();
         wifiOn = !wifiOn;
         renderToggle();
-        renderList();
+        render();
       });
 
       renderToggle();
-      renderList();
+      render();
       return panel;
     }
 

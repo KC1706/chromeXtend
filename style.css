@@ -1,7 +1,9 @@
 /*
  * Menu Bar Overlay — styles
- * Everything is scoped under #fake-mac-menubar so it doesn't bleed into the
- * host page. The bar sits off-screen until JS adds the .visible class.
+ * The bar is styled after the dark macOS (Sonoma/Sequoia) menu bar, and the
+ * Wi-Fi panel after Control Center. Bar rules are scoped under
+ * #fake-mac-menubar; the dropdown is appended to <html>, so its selectors
+ * stand alone (prefixed with .mb-dd / .mb-dropdown to avoid host-page bleed).
  */
 
 #fake-mac-menubar {
@@ -23,12 +25,12 @@
   pointer-events: none; /* never block the page while hidden */
   transition: top 0.2s ease-in-out;
 
-  /* Light (default) theme */
-  color: rgba(0, 0, 0, 0.85);
-  background: rgba(245, 245, 245, 0.62);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
-  backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.12);
+  /* Dark macOS menu bar look */
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(22, 22, 26, 0.72);
+  -webkit-backdrop-filter: saturate(160%) blur(20px);
+  backdrop-filter: saturate(160%) blur(20px);
+  box-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.08);
 }
 
 #fake-mac-menubar.visible {
@@ -61,6 +63,11 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+#fake-mac-menubar .mb-batt-level {
+  font-weight: 400;
+  margin-right: -10px; /* tuck the % right up against the battery icon */
+  font-variant-numeric: tabular-nums;
+}
 
 /* Apple logo + status icons render inline SVGs that follow `color` */
 #fake-mac-menubar .mb-apple,
@@ -83,29 +90,27 @@
 }
 #fake-mac-menubar .mb-wifi.active,
 #fake-mac-menubar .mb-wifi:hover {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.16);
 }
 
-/* ---- Dropdown panel (Wi-Fi network picker) ----------------------------- */
-/* Appended to <html>, not nested in the bar, so these selectors stand alone. */
+/* ---- Wi-Fi panel (macOS Control Center style) -------------------------- */
 .mb-dropdown {
   position: fixed;
   box-sizing: border-box;
-  min-width: 268px;
-  max-width: 340px;
-  padding: 7px;
-  border-radius: 11px;
+  width: 340px;
+  max-width: calc(100vw - 16px);
+  padding: 10px 11px 8px;
+  border-radius: 13px;
   z-index: 2147483647;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
     sans-serif;
-  font-size: 13px;
-  line-height: 1.2;
   pointer-events: auto;
-  color: rgba(0, 0, 0, 0.88);
-  background: rgba(246, 246, 246, 0.78);
-  -webkit-backdrop-filter: saturate(180%) blur(22px);
-  backdrop-filter: saturate(180%) blur(22px);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.28), 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(42, 42, 46, 0.78);
+  -webkit-backdrop-filter: saturate(180%) blur(28px);
+  backdrop-filter: saturate(180%) blur(28px);
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5),
+    0 0 0 0.5px rgba(255, 255, 255, 0.12);
   animation: mb-dd-in 0.12s ease-out;
 }
 @keyframes mb-dd-in {
@@ -123,126 +128,146 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 8px 8px;
+  padding: 2px 6px 6px;
 }
 .mb-dd-title {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 15px;
 }
 
-/* iOS-style on/off switch */
+/* Larger iOS-style switch, macOS-blue when on */
 .mb-switch {
   all: unset;
   box-sizing: border-box;
   position: relative;
-  width: 34px;
-  height: 20px;
-  border-radius: 11px;
+  width: 38px;
+  height: 23px;
+  border-radius: 12px;
   cursor: default;
-  background: rgba(120, 120, 128, 0.32);
-  transition: background 0.18s ease;
+  background: rgba(120, 120, 128, 0.36);
+  transition: background 0.2s ease;
 }
 .mb-switch::after {
   content: "";
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 16px;
-  height: 16px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  transition: transform 0.18s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
 }
 .mb-switch.on {
-  background: #34c759;
+  background: #0a84ff;
 }
 .mb-switch.on::after {
-  transform: translateX(14px);
+  transform: translateX(15px);
 }
 
-.mb-dd-sep {
-  height: 0.5px;
-  margin: 2px 6px 4px;
-  background: rgba(0, 0, 0, 0.12);
-}
-
-.mb-dd-list {
+.mb-dd-body {
   display: flex;
   flex-direction: column;
 }
+
+/* Gray section headers ("Personal Hotspot", "Known Networks") */
+.mb-dd-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(235, 235, 245, 0.5);
+  padding: 8px 8px 3px;
+}
+
+/* Rows */
 .mb-dd-item {
   all: unset;
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: 6px;
+  gap: 11px;
+  min-height: 34px;
+  padding: 4px 8px;
+  border-radius: 7px;
   cursor: default;
 }
 .mb-dd-item:hover {
-  background: rgba(0, 0, 0, 0.07);
+  background: rgba(255, 255, 255, 0.09);
 }
-.mb-dd-check {
+
+/* Leading icon slot (fixed size so names line up) */
+.mb-dd-ico {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
   display: inline-flex;
+  align-items: center;
   justify-content: center;
-  width: 14px;
-  color: inherit;
+  color: rgba(255, 255, 255, 0.92);
 }
-.mb-dd-check svg {
+.mb-dd-ico svg {
   display: block;
 }
+.mb-ico-box {
+  background: #0a84ff;
+  border-radius: 7px;
+  color: #fff;
+}
+.mb-ico-circle {
+  background: #0a84ff;
+  border-radius: 50%;
+  color: #fff;
+}
+
 .mb-dd-name {
   flex: 1;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mb-dd-item.connected .mb-dd-name {
-  font-weight: 600;
+
+/* Hotspot row right-side meta: cellular bars + signal label + battery */
+.mb-dd-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.9);
 }
-.mb-dd-status {
-  font-size: 11px;
-  opacity: 0.55;
-  white-space: nowrap;
+.mb-meta-cell,
+.mb-meta-batt {
+  display: inline-flex;
 }
+.mb-meta-cell svg,
+.mb-meta-batt svg {
+  display: block;
+}
+.mb-meta-sig {
+  font-size: 12px;
+}
+
 .mb-dd-lock {
   display: inline-flex;
-  opacity: 0.5;
+  opacity: 0.55;
 }
 .mb-dd-lock svg {
   display: block;
 }
-.mb-dd-empty {
-  padding: 8px;
-  text-align: center;
-  opacity: 0.6;
+.mb-dd-chevron {
+  display: inline-flex;
+  opacity: 0.4;
+}
+.mb-dd-chevron svg {
+  display: block;
 }
 
-/* Dark theme */
-@media (prefers-color-scheme: dark) {
-  #fake-mac-menubar {
-    color: rgba(255, 255, 255, 0.92);
-    background: rgba(0, 0, 0, 0.45);
-    box-shadow: 0 0.5px 0 rgba(255, 255, 255, 0.1);
-  }
-  #fake-mac-menubar .mb-wifi.active,
-  #fake-mac-menubar .mb-wifi:hover {
-    background: rgba(255, 255, 255, 0.16);
-  }
-  .mb-dropdown {
-    color: rgba(255, 255, 255, 0.92);
-    background: rgba(40, 40, 42, 0.72);
-    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.5),
-      0 0 0 0.5px rgba(255, 255, 255, 0.1);
-  }
-  .mb-dd-sep {
-    background: rgba(255, 255, 255, 0.14);
-  }
-  .mb-dd-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  .mb-switch {
-    background: rgba(120, 120, 128, 0.5);
-  }
+.mb-dd-sep {
+  height: 0.5px;
+  margin: 6px 6px;
+  background: rgba(255, 255, 255, 0.14);
+}
+.mb-dd-empty {
+  padding: 10px 8px;
+  text-align: center;
+  opacity: 0.6;
 }

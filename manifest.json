@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "youtube speed controller",
   "version": "1.0.0",
-  "description": "A cosmetic, hover-revealed fake macOS menu bar overlay for webpages. For theming, UI demos, mockups and screenshots.",
+  "description": "Speed up, slow down, advance and rewind HTML5 audio/video with shortcuts",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

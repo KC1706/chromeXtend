@@ -26,24 +26,34 @@ window.__MENUBAR_CONFIG__ = {
   // Remove or reorder as you like. Available: "battery", "wifi", "search", "control".
   rightIcons: ["battery", "wifi", "search", "control"],
 
-  // Clicking the Wi-Fi icon opens a cosmetic macOS-style dropdown.
+  // Text shown just before the battery icon (e.g. "10%"). Empty string hides it.
+  batteryLevel: "90%",
+
+  // Clicking the Wi-Fi icon opens a cosmetic macOS Control-Center-style panel.
   wifi: {
-    // Whether Wi-Fi is "on" (shows the network list) or "off".
+    // Whether Wi-Fi is "on" (shows the networks) or "off".
     on: true,
-    // Networks listed in the dropdown, top to bottom.
-    networks: ["CDC_Test", "ACADEMIC"],
-    // Which network shows as the connected one (gets the checkmark + "Connected").
-    connected: "CDC_Test"
+    // The "Personal Hotspot" entry at the top. Set to null to hide the section.
+    personalHotspot: null,
+    // The "Known Networks" list. `connected: true` marks the active one (blue icon).
+    knownNetworks: [
+      { name: "CDC_Test", connected: true },
+      { name: "ACADEMICS" }
+    ]
   },
 
   // Live clock on the far right.
   showClock: true,
   clock: {
     // BCP-47 locale used for formatting (e.g. "en-US", "en-GB", "de-DE").
-    locale: "en-US",
-    // Intl.DateTimeFormat options. Default renders like "Mon 9:41 AM".
+    // en-GB gives day-before-month ordering, matching the macOS menu bar.
+    locale: "en-GB",
+    // Intl.DateTimeFormat options. Renders like "Tue 10 Nov 3:48 PM"
+    // (commas are stripped and am/pm upper-cased by content.js).
     format: {
       weekday: "short",
+      day: "numeric",
+      month: "short",
       hour: "numeric",
       minute: "2-digit",
       hour12: true
@@ -74,6 +84,18 @@ window.__MENUBAR_CONFIG__ = {
       '<svg viewBox="0 0 14 14" width="13" height="13" fill="none" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     // Small padlock shown on secured networks in the Wi-Fi dropdown.
     lock:
-      '<svg viewBox="0 0 12 14" width="11" height="13" fill="currentColor" aria-hidden="true"><rect x="1.5" y="6" width="9" height="7" rx="1.4"/><path d="M3.3 6V4.2a2.7 2.7 0 015.4 0V6" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>'
+      '<svg viewBox="0 0 12 14" width="11" height="13" fill="currentColor" aria-hidden="true"><rect x="1.5" y="6" width="9" height="7" rx="1.4"/><path d="M3.3 6V4.2a2.7 2.7 0 015.4 0V6" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>',
+    // Chain-link glyph for the Personal Hotspot row (white, on a blue square).
+    hotspot:
+      '<svg viewBox="0 0 18 18" width="13" height="13" fill="none" aria-hidden="true"><path d="M7.4 10.6a2.8 2.8 0 010-4l1.8-1.8a2.8 2.8 0 014 4l-1 1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M10.6 7.4a2.8 2.8 0 010 4l-1.8 1.8a2.8 2.8 0 01-4-4l1-1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+    // Ascending cellular bars shown next to the hotspot "5G" label.
+    cell:
+      '<svg viewBox="0 0 20 14" width="17" height="12" fill="currentColor" aria-hidden="true"><rect x="0" y="9" width="3.4" height="5" rx="1"/><rect x="5.4" y="6.5" width="3.4" height="7.5" rx="1"/><rect x="10.8" y="3.5" width="3.4" height="10.5" rx="1"/><rect x="16.2" y="0.5" width="3.4" height="13.5" rx="1"/></svg>',
+    // Small battery used inside the hotspot row meta.
+    battMini:
+      '<svg viewBox="0 0 26 13" width="22" height="11" fill="none" aria-hidden="true"><rect x="0.5" y="0.5" width="22" height="12" rx="3" stroke="currentColor" stroke-opacity="0.6"/><rect x="2" y="2" width="16" height="9" rx="1.5" fill="currentColor"/><path d="M24 4c1 .2 1 4.6 0 4.8V4z" fill="currentColor" fill-opacity="0.6"/></svg>',
+    // Right chevron for the "Other Networks" row.
+    chevron:
+      '<svg viewBox="0 0 8 14" width="7" height="12" fill="none" aria-hidden="true"><path d="M1 1l5.5 6L1 13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   }
 };
